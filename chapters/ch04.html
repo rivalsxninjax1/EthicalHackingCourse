@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>CYBERLAB</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../core/styles.css" />
+  </head>
+  <body data-root="../" data-ch="4">
+    <div class="app">
+      <aside id="side"></aside>
+      <main id="main"></main>
+    </div>
+    <script src="../core/course.js"></script>
+    <script src="../core/engine.js"></script>
+    <script src="../core/shell.js"></script>
+    <script src="../core/viz-seq.js"></script><script src="../core/viz-term.js"></script><script src="../core/viz-build.js"></script>
+
+    <script id="deep-04">
+      Object.assign(GL, {
+        OSINT:
+          "Open-source intelligence: information gathered from publicly available sources.",
+        "passive reconnaissance":
+          "Collecting information without sending traffic to the target’s own systems.",
+        "active reconnaissance":
+          "Interacting directly with the target’s systems to learn about them. Needs authorisation.",
+        subdomain: "A name beneath a domain, such as mail.example.com.",
+        metadata:
+          "Data about data, such as the author, software or GPS location stored in a file.",
+        "certificate transparency":
+          "Public logs of issued TLS certificates, which can reveal hostnames.",
+        SPF: "A DNS record listing which servers may send mail for a domain.",
+        DMARC:
+          "A DNS policy telling receivers what to do with mail that fails SPF or DKIM checks.",
+        banner:
+          "Text a service sends that can reveal its software and version.",
+        "DNS record":
+          "An entry in DNS mapping a name to data such as an IP address or mail server.",
+        reconnaissance:
+          "The information-gathering phase that comes before testing.",
+      });
+      DEEP[4] = {
+        stage: 2,
+        level: "Level 3 · Application",
+        plan: [
+          "Block A, Concept (45 min): passive vs active, the OSINT cycle, DNS records, validation.",
+          "Block B, Visual (45 min): Attack Surface Builder, DNS terminal simulation, clue explorer.",
+          "Block C, Guided lab (60 min): investigate your own fictional web server.",
+          "Block D, Challenge (45 min): rank and fix what leaks.",
+          "Block E, Quiz (15 min): eight questions.",
+        ],
+        obj: [
+          "Separate {{passive reconnaissance}} from {{active reconnaissance}} and say which needs authorisation",
+          "Run an {{OSINT}} investigation as a cycle: plan, collect, process, analyse, report",
+          "Read {{DNS record}} types and explain what each reveals",
+          "Show how harmless clues combine into an attack surface",
+          "Rate each finding by confidence and record its source",
+          "Recommend how to shrink what an organisation exposes",
+        ],
+        why: [
+          "Real attacks begin here, so defenders who see their own exposure first can close gaps before anyone else uses them.",
+          "Pen tests spend their first hours on recon: it decides where the time goes.",
+          "Forgotten servers, leaked documents and weak email settings are common real findings and cost nothing to find.",
+          "Developers and administrators control much of what leaks: headers, error pages, comments, repositories and DNS.",
+        ],
+        simple:
+          "Before testing a building, you walk around it: where are the doors, what is on the noticeboard, who works here. Reconnaissance is doing the same for an organisation. The goal is to list what is exposed and decide what deserves a closer look, without touching anything you are not allowed to touch.",
+        tech: [
+          "{{passive reconnaissance}} uses information already public: search engines, public records, job postings, {{certificate transparency}} logs and DNS answers from public resolvers. It sends nothing to the target’s own servers.",
+          "{{active reconnaissance}} sends traffic to the target (scanning, requests, probing). It can be logged and is only allowed inside agreed scope.",
+          "{{DNS record}} types reveal structure: A and AAAA give addresses, MX shows mail providers, NS shows name servers, TXT may hold {{SPF}} and {{DMARC}} policies and vendor verification tokens, CNAME points a name at another.",
+          "A {{subdomain}} such as staging.example.com often hosts forgotten or less protected systems. Certificate logs and DNS records can list them.",
+          "Every {{banner}}, header, error page and file’s {{metadata}} can leak software names and versions.",
+          "Treat each clue as a hypothesis. A finding is confirmed only when a second, independent source or a safe test supports it.",
+        ],
+        dive: [
+          "The OSINT cycle: set the question and scope, collect, process into a usable form, analyse for meaning, report with confidence levels. Keep a log of every source and time so work can be repeated and checked.",
+          "Analysts often rate sources and information separately: a reliable source can pass along a wrong claim. Record both.",
+          "Search operators such as site:, filetype:, intitle: and inurl: narrow search results. Their behaviour changes over time, so check your search engine’s help page, and use them only on your own organisation or a fictional one.",
+          "Passive does not mean free of ethics. Individuals’ personal data is protected by privacy laws in many places. Engagements usually limit people-focused collection to roles and public business information, and any social engineering must be explicitly in scope.",
+          "robots.txt is a request to well-behaved crawlers, not a control. Listing sensitive paths in it advertises them.",
+          "security.txt (RFC 9116) is a standard file at /.well-known/security.txt telling researchers how to report a vulnerability. Its presence is a good sign.",
+        ],
+        ana: "A detective’s first day on a case. Read the public file, walk the street, note the doors, windows and the noticeboard, and write down who said what. Nothing is accepted as fact until a second source agrees.",
+        anaStop:
+          "On the internet your “walk” can leave records in logs, one source can be wrong or planted, and copying people’s personal details has legal and ethical limits that a detective on a licensed case still has to respect.",
+        viz: [
+          {
+            t: "Attack Surface Builder",
+            layers: [
+              {
+                n: "Domain",
+                items: [
+                  [
+                    "{d}",
+                    "The anchor. Registration, DNS and certificate records tie everything else to it.",
+                  ],
+                  [
+                    "Name servers and registrar",
+                    "Show which providers the organisation depends on.",
+                  ],
+                ],
+              },
+              {
+                n: "Subdomains",
+                items: [
+                  ["www.{d}", "The public website."],
+                  ["mail.{d}", "Email access."],
+                  ["vpn.{d}", "Remote access for staff."],
+                  ["staging.{d}", "A test environment, often forgotten."],
+                  [
+                    "api.{d}",
+                    "A programmatic interface for customers or apps.",
+                  ],
+                ],
+              },
+              {
+                n: "Applications",
+                items: [
+                  [
+                    "Public site and contact form",
+                    "Takes input from strangers.",
+                  ],
+                  ["Webmail login", "An identity checkpoint."],
+                  ["VPN gateway login", "A door into the internal network."],
+                  [
+                    "Staging application",
+                    "May have weaker controls and real data.",
+                  ],
+                  ["Customer API", "Returns data per user or object."],
+                ],
+              },
+              {
+                n: "Technologies",
+                items: [
+                  [
+                    "Web server header and error pages",
+                    "Software and sometimes version.",
+                  ],
+                  [
+                    "Job ad: “experience with ExampleVPN and Postgres”",
+                    "Names the VPN product and database.",
+                  ],
+                  ["Page source generator tag", "Names the CMS."],
+                  [
+                    "Certificate issuer and expiry",
+                    "Hints at who manages certificates and how carefully.",
+                  ],
+                ],
+              },
+              {
+                n: "People and roles",
+                items: [
+                  [
+                    "IT administrator (public profile names the VPN product)",
+                    "Role plus technology knowledge.",
+                  ],
+                  [
+                    "Support staff; email format first.last@{d}",
+                    "Reveals the address pattern.",
+                  ],
+                  [
+                    "Developer whose public repository names internal services",
+                    "Names that were not meant to be public.",
+                  ],
+                ],
+              },
+              {
+                n: "Potential attack surfaces (hypotheses to verify)",
+                items: [
+                  [
+                    "vpn.{d}: exposed remote-access login",
+                    "Verify version and that multi-factor authentication is on. Defender: MFA, patching, restrict by source.",
+                  ],
+                  [
+                    "staging.{d}: forgotten environment",
+                    "Verify what it contains. Defender: remove or protect it, do not expose it publicly.",
+                  ],
+                  [
+                    "Staff emails plus weak email authentication",
+                    "Verify SPF and DMARC. Defender: publish and enforce them, train staff.",
+                  ],
+                  [
+                    "api.{d}: object-level authorization",
+                    "Verify later in the web modules. Defender: authorization on every object.",
+                  ],
+                  [
+                    "Public repository",
+                    "Verify for leaked names or secrets. Defender: secret scanning, review before publishing.",
+                  ],
+                ],
+              },
+            ],
+          },
+          {
+            t: "DNS records (SIMULATED answers for a fictional domain)",
+            prompt: "student@lab:~$",
+            cmds: {
+              "dig acme.test A +short": "203.0.113.10",
+              "dig acme.test MX +short": "10 mail.acme.test.",
+              "dig acme.test NS +short":
+                "ns1.dnsvendor.test.\nns2.dnsvendor.test.",
+              "dig acme.test TXT +short":
+                '"v=spf1 include:_spf.mailvendor.test ~all"\n"site-verification=abc123-not-real"\n"cloud-verify=def456-not-real"',
+              "dig _dmarc.acme.test TXT +short":
+                "(no answer: no DMARC policy is published)",
+              "dig staging.acme.test A +short": "203.0.113.55",
+              "curl -I http://staging.acme.test":
+                "(not run: this is active reconnaissance. It needs written scope first.)",
+            },
+          },
+          {
+            t: "Harmless clues that combine: click each one",
+            items: [
+              {
+                n: "Job postings",
+                w: "Lists the technologies a team uses and sometimes versions.",
+                r: "Which products and platforms does this company run?",
+                c: "Describe skills without naming exact products and versions.",
+              },
+              {
+                n: "Certificate transparency logs",
+                w: "Public logs of issued certificates, which can reveal hostnames that were never linked anywhere.",
+                r: "Which hostnames exist, including staging and internal-looking ones?",
+                c: "Use wildcard certificates carefully; assume every certified name is public.",
+              },
+              {
+                n: "DNS records",
+                w: "{{DNS record}}s show providers, mail setup and vendor verification tokens.",
+                r: "Which third parties and mail protections are in place?",
+                c: "Remove unused records; enforce {{SPF}} and {{DMARC}}.",
+              },
+              {
+                n: "Public code repositories",
+                w: "Developers sometimes publish internal names, configuration or secrets.",
+                r: "Is there anything here that was meant to stay internal?",
+                c: "Secret scanning, review before publishing, rotate anything exposed.",
+              },
+              {
+                n: "Document and image metadata",
+                w: "{{metadata}} such as author names, software versions or GPS coordinates can remain inside PDFs, Office files and photos.",
+                r: "What does the file reveal about people, tools and locations?",
+                c: "Strip metadata before publishing.",
+              },
+              {
+                n: "Error pages and headers",
+                w: "A {{banner}} or default error page may name the software and version.",
+                r: "What is running, and is it out of date?",
+                c: "Disable version display; use generic error pages.",
+              },
+              {
+                n: "Staff profiles",
+                w: "Role and tool information combined with email patterns helps targeted phishing.",
+                r: "Who would a convincing message come from, and to whom?",
+                c: "Awareness training, mail filtering, phishing-resistant MFA, and ethics: stay within scope.",
+              },
+            ],
+          },
+          {
+            t: "The OSINT cycle",
+            ord: 1,
+            items: [
+              {
+                n: "Plan",
+                w: "Agree the question, scope and what is off limits, in writing, before collecting anything.",
+                r: "What do I need to learn, and what am I not allowed to touch?",
+                c: "Written authorisation and rules of engagement.",
+              },
+              {
+                n: "Collect",
+                w: "Gather from public sources, logging each source and the time.",
+                r: "Which sources are reliable and independent?",
+                c: "Know what you publish: audit your own exposure the same way.",
+              },
+              {
+                n: "Process",
+                w: "Clean, de-duplicate and organise the raw material.",
+                r: "What is signal and what is noise?",
+                c: "Keep an inventory of your own assets to compare against.",
+              },
+              {
+                n: "Analyse",
+                w: "Combine clues into hypotheses and rate confidence: confirmed, likely or assumption.",
+                r: "Which claim has only one source?",
+                c: "Make decisions on confirmed findings, and verify the rest safely.",
+              },
+              {
+                n: "Report",
+                w: "Deliver findings with sources, confidence and recommendations.",
+                r: "Can someone else reproduce this?",
+                c: "Track fixes and re-check what was exposed.",
+              },
+            ],
+          },
+          {
+            t: "From clue to confirmed fact",
+            ord: 1,
+            items: [
+              {
+                n: "Observe",
+                w: "You notice staging.acme.test in a certificate log.",
+                r: "What exactly did I see, and where?",
+                c: "Keep a log with source and time.",
+              },
+              {
+                n: "Hypothesis",
+                w: "There may be a test environment at that name.",
+                r: "What would I expect if it is true?",
+                c: "Maintain an asset inventory so surprises are visible.",
+              },
+              {
+                n: "Corroborate",
+                w: "Find a second, independent source, such as a DNS record, that agrees.",
+                r: "Does any independent evidence contradict me?",
+                c: "Remove stale DNS so old names do not mislead.",
+              },
+              {
+                n: "Check scope",
+                w: "Confirm in writing that the name is in scope before any active step.",
+                r: "Am I allowed to touch this?",
+                c: "Clear scope documents.",
+              },
+              {
+                n: "Verify safely",
+                w: "Only if allowed: one minimal request to confirm it exists. Then record the evidence and stop.",
+                r: "Do I need to go further to answer the question?",
+                c: "Alerts on odd requests to non-public hosts.",
+              },
+            ],
+          },
+        ],
+        tables: [
+          {
+            t: "Passive vs active reconnaissance",
+            h: ["", "Passive", "Active"],
+            r: [
+              [
+                "What it is",
+                "Uses information already public",
+                "Sends traffic to the target’s systems",
+              ],
+              [
+                "Examples",
+                "Search engines, public records, DNS answers from a public resolver, certificate logs",
+                "Port scans, probing web paths, requesting pages from a host",
+              ],
+              [
+                "Visible to the target",
+                "Usually not",
+                "Often, in logs and alerts",
+              ],
+              [
+                "Authorisation",
+                "Still follow scope and privacy rules",
+                "Written authorisation required",
+              ],
+            ],
+          },
+          {
+            t: "DNS record types",
+            h: ["Record", "Maps", "Why it matters"],
+            r: [
+              [
+                "A / AAAA",
+                "Name to IPv4 / IPv6 address",
+                "Shows where services live",
+              ],
+              ["MX", "Domain to mail servers", "Shows the mail provider"],
+              ["NS", "Domain to name servers", "Shows DNS providers"],
+              [
+                "TXT",
+                "Free text",
+                "{{SPF}}, {{DMARC}}, vendor verification tokens",
+              ],
+              [
+                "CNAME",
+                "Name to another name",
+                "Can point at an abandoned service",
+              ],
+              ["SOA", "Zone administration data", "Zone serial and contact"],
+            ],
+          },
+          {
+            t: "Search operators (check your search engine’s help; use on fictional or your own targets)",
+            h: ["Operator", "Purpose", "Example"],
+            r: [
+              ["site:", "Limit to one site", "site:example.com"],
+              [
+                "filetype:",
+                "Limit to a file type",
+                "filetype:pdf site:example.com",
+              ],
+              ["intitle:", "Words in the page title", "intitle:index.of"],
+              ["inurl:", "Words in the URL", "inurl:admin site:example.com"],
+            ],
+          },
+        ],
+        av: [
+          [
+            "Define scope and questions first",
+            "Collect from public sources and log each one",
+            "Combine clues into hypotheses",
+            "Rate confidence and corroborate",
+            "Verify actively only with authorisation",
+          ],
+          [
+            "Inventory every asset and domain",
+            "Remove stale DNS and old hosts",
+            "Strip metadata and hide version banners",
+            "Keep secrets out of repositories",
+            "Search for yourself regularly",
+          ],
+        ],
+        rules: [
+          [
+            "Scope before probing",
+            "Passive collection is not an excuse to ignore scope. Anything that sends traffic to a target’s system needs written authorisation.",
+          ],
+          [
+            "People are not targets",
+            "Collect role and business information. Do not collect personal social media, family details or home addresses, and do not contact employees unless social engineering is in scope.",
+          ],
+          [
+            "Fictional domains only",
+            "Practise on .test names, example.com (reserved by IANA for documentation) and your own lab. Never use a real company as a practice target.",
+          ],
+          [
+            "Log your sources",
+            "Record where each fact came from and when. Findings you cannot trace are findings you cannot defend.",
+          ],
+        ],
+        roe: "RECON LOG\nQuestion:\nSource:        (URL or tool, plus date and time)\nObservation:\nConfidence:    confirmed / likely / assumption\nSecond source:\nIn scope?      yes / no / unknown\nNext step:",
+        tools: [
+          {
+            n: "dig, nslookup and whois",
+            p: "Query DNS records and domain registration data.",
+            u: "You need the records for a domain you are allowed to investigate.",
+            c: "Treating one record as complete; assuming whois data is accurate or current.",
+            s: "dig example.com A +short (example.com is reserved for documentation).",
+            d: "Defenders audit their own records for stale or unexpected entries.",
+          },
+          {
+            n: "curl and browser developer tools",
+            p: "Show headers, page source, comments and linked files.",
+            u: "Studying what a visitor to your lab site can see.",
+            c: "Using them against hosts that are not in scope.",
+            s: "curl -I http://127.0.0.1:8080",
+            d: "Shows the same leaks a stranger would see, so you can remove them.",
+          },
+          {
+            n: "Search engines and certificate logs (concepts)",
+            p: "Find public pages, documents and hostnames.",
+            u: "Passive discovery for an in-scope organisation.",
+            c: "Treating results as fact without a second source.",
+            s: "Search for your own organisation’s name plus filetype:pdf.",
+            d: "Regularly searching for yourself finds leaks before others do.",
+          },
+          {
+            n: "Automated OSINT tools (concept)",
+            p: "Tools such as Amass or theHarvester automate collection. Check each tool’s current documentation for passive-only options.",
+            u: "After you understand the manual process.",
+            c: "Letting a tool run active probing against targets that are not in scope.",
+            s: "Read the documentation and test against your own lab first.",
+            d: "The same data tells you what an attacker’s tool would find about you.",
+          },
+        ],
+        try: [
+          [
+            "1. What you need",
+            "Docker, a terminal with curl and dig (macOS and Linux include them; on Windows use WSL, or nslookup). You will build a small fictional website and investigate it. About 50 MB of disk.",
+          ],
+          [
+            "2. Install",
+            "Nothing new. Windows: run the bash commands in WSL or Git Bash, or in PowerShell replace $(pwd) with ${PWD}. The nginx:alpine image supports arm64, so Apple Silicon needs no emulation.",
+          ],
+          [
+            "3. Setup",
+            "Create a fictional site with deliberate information leaks, then serve it on your own machine only.",
+            `mkdir -p lab-site/admin lab-site/.well-known
+cat > lab-site/index.html <<'EOT'
+<!doctype html><html><head><title>ACME Cyber Lab</title>
+<meta name="generator" content="AcmeCMS 2.1"></head>
+<body><h1>ACME Cyber Lab</h1><p>Contact: jane.doe@acme.test</p>
+<!-- TODO remove: staging link http://staging.acme.test/admin -->
+</body></html>
+EOT
+cat > lab-site/robots.txt <<'EOT'
+User-agent: *
+Disallow: /admin/
+Disallow: /backup/
+EOT
+cat > lab-site/.well-known/security.txt <<'EOT'
+Contact: mailto:security@acme.test
+Expires: 2030-12-31T00:00:00Z
+EOT
+echo '<h1>Staff login (lab)</h1>' > lab-site/admin/index.html
+docker run -d --name acme-web -p 127.0.0.1:8080:80 -v "$(pwd)/lab-site:/usr/share/nginx/html:ro" nginx:alpine`,
+          ],
+          [
+            "4. Verify",
+            "Confirm it runs and answers.",
+            `docker ps
+curl -I http://127.0.0.1:8080`,
+          ],
+          [
+            "5. Experiment",
+            "Look at the site as a stranger would, using only normal requests to your own server. Then practise DNS on a name reserved for documentation.",
+            `curl -s http://127.0.0.1:8080/robots.txt
+curl -s http://127.0.0.1:8080/.well-known/security.txt
+curl -s http://127.0.0.1:8080/ | grep -i -E 'generator|<!--|@'
+dig example.com A +short       # Windows: nslookup example.com
+dig example.com MX +short
+dig example.com NS +short
+dig example.com TXT +short`,
+          ],
+          [
+            "6. Observe",
+            "The headers include Server: nginx/ followed by a version number. robots.txt lists /admin/ and /backup/. security.txt lists a contact. The page source reveals the generator tag, a staff email and a comment naming a staging host. The dig answers for example.com can change over time, so treat them as examples.",
+          ],
+          [
+            "7. Understand",
+            "None of this was hacking. Every item was offered to any visitor. Together they name the software, the staff naming pattern, a forgotten environment and two sensitive paths. That is the passive and low-contact picture an attacker starts from.",
+          ],
+          [
+            "8. Break it",
+            "Prove that robots.txt is not protection: the paths it ‘hides’ can be requested directly.",
+            "curl -s http://127.0.0.1:8080/admin/",
+          ],
+          [
+            "9. Fix it",
+            "Hide the version and restrict /admin/, then delete the HTML comment and the personal email from index.html by hand. Restart with the new configuration and re-run the checks.",
+            `cat > nginx.conf <<'EOT'
+server {
+  listen 80;
+  server_tokens off;
+  root /usr/share/nginx/html;
+  location /admin/ { deny all; }
+}
+EOT
+docker rm -f acme-web
+docker run -d --name acme-web -p 127.0.0.1:8080:80 -v "$(pwd)/lab-site:/usr/share/nginx/html:ro" -v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf:ro" nginx:alpine
+curl -I http://127.0.0.1:8080          # Server: nginx with no version
+curl -i http://127.0.0.1:8080/admin/   # 403 Forbidden`,
+          ],
+        ],
+        check: [
+          "Built and ran the fictional site on 127.0.0.1:8080",
+          "Found the server version, the comment and the email address",
+          "Proved that robots.txt does not protect /admin/",
+          "Fixed the version display and blocked /admin/",
+          "Ran the Attack Surface Builder for a fictional organisation",
+          "Wrote a recon log with confidence levels",
+        ],
+        ch: {
+          q: "Using only normal requests to your lab site, list every piece of information a stranger could learn. Rate each by how useful it is to an attacker and write the fix.",
+          h: [
+            "Check headers, the page source, robots.txt and security.txt.",
+            "Think about software versions, people, hidden paths and forgotten systems.",
+            "Rate by usefulness: an exposed path or a version number is usually more useful than a contact address.",
+          ],
+          s: "Findings: the nginx version (fix: server_tokens off), the generator tag (remove it), the staff email (use a role address), the staging link in a comment (delete the comment and the staging host or protect it), /admin/ and /backup/ in robots.txt (protect them properly; do not advertise them). security.txt is good practice and should stay.",
+        },
+        proj: [
+          "Attack surface report",
+          "Run the Attack Surface Builder for a fictional organisation. For each layer, record the item, source, confidence (confirmed, likely or assumption), why it matters and one defender action. One page.",
+        ],
+        mist: [
+          "Probing a target before checking scope",
+          "Treating a single source as fact",
+          "Believing robots.txt hides pages",
+          "Collecting personal details about staff",
+          "Forgetting to log sources and times",
+          "Assuming old DNS records are harmless",
+          "Practising on real companies instead of fictional or lab targets",
+        ],
+        quiz: [
+          {
+            t: "mc",
+            q: "Which is passive reconnaissance?",
+            o: [
+              "Scanning a company’s ports",
+              "Reading a company’s public job postings",
+              "Requesting /admin from its web server",
+            ],
+            a: 1,
+            why: "Job postings are public. Scanning and requesting pages send traffic to the target.",
+          },
+          {
+            t: "tf",
+            q: "robots.txt prevents anyone from reaching the pages it lists.",
+            a: 1,
+            why: "It is a request to crawlers. Anyone can request the listed paths, and the file actually advertises them.",
+          },
+          {
+            t: "mc",
+            q: "A certificate log shows staging.acme.test. What should you do first?",
+            o: [
+              "Scan it",
+              "Treat it as a hypothesis, corroborate it, and check scope before any active step",
+              "Report it as a confirmed breach",
+            ],
+            a: 1,
+            why: "One passive source gives a hypothesis. Active steps need scope and authorisation.",
+          },
+          {
+            t: "order",
+            q: "Put the OSINT cycle in order.",
+            o: ["Analyse", "Plan", "Report", "Collect", "Process"],
+            a: ["Plan", "Collect", "Process", "Analyse", "Report"],
+            why: "Correct order: Plan, Collect, Process, Analyse, Report.",
+          },
+          {
+            t: "mc",
+            q: "A domain has no SPF or DMARC records. What risk does that suggest?",
+            o: [
+              "Slower websites",
+              "Easier email spoofing and phishing",
+              "Weak TLS",
+            ],
+            a: 1,
+            why: "Without them, receivers have less to check when someone forges mail from that domain.",
+          },
+          {
+            t: "mc",
+            q: "One blog post says the CTO uses a certain VPN product. How confident are you?",
+            o: [
+              "Fully confident",
+              "Low until a second independent source agrees",
+              "Not worth recording",
+            ],
+            a: 1,
+            why: "Record it with its source and rate it low confidence until corroborated.",
+          },
+          {
+            t: "tf",
+            q: "It is fine to collect employees’ personal social media during an engagement without it being in scope.",
+            a: 1,
+            why: "Privacy and scope limits apply. Collect role and business information, and treat anything more personal as out of scope unless explicitly agreed.",
+          },
+          {
+            t: "mc",
+            q: "A domain’s TXT records contain verification tokens for five different cloud services. What does that tell you?",
+            o: [
+              "Nothing",
+              "Which third-party services the organisation uses, a clue to its technology and supply chain",
+              "The domain is malicious",
+            ],
+            a: 1,
+            why: "Vendor verification tokens reveal which services are in use, which widens the attack surface to those providers.",
+          },
+        ],
+        recap: [
+          "Passive: public sources, nothing sent to the target. Active: traffic to the target, needs authorisation",
+          "OSINT cycle: plan, collect, process, analyse, report",
+          "Harmless clues combine into an attack surface",
+          "DNS records, certificates, headers, comments and metadata all leak",
+          "Rate confidence and corroborate before acting",
+          "robots.txt is not protection",
+          "Stay with fictional, lab and in-scope targets",
+        ],
+        next: "You now know what is exposed and how to rate it. Module 05 moves from public information to direct discovery: scanning and enumeration, learning which hosts, ports and services answer, on your own lab only.",
+        inst: [
+          [
+            "Teaching notes and timing",
+            [
+              "A (0:00 to 0:45) passive vs active, the cycle; B (0:45 to 1:30) drive the Builder with a class-chosen fictional company; C (1:30 to 2:30) lab; D (2:30 to 3:15) rank and fix; E (3:15 to 3:30) quiz.",
+              "Talking point: the attacker’s edge here is patience, and the defender’s edge is knowing their own exposure first.",
+            ],
+          ],
+          [
+            "Common student confusion",
+            [
+              "Passive means legal and unlimited",
+              "robots.txt as security",
+              "Treating tools’ output as truth",
+              "Whether people are legitimate targets",
+            ],
+          ],
+          [
+            "Discussion questions",
+            [
+              "Which leak in the lab would worry you most?",
+              "When does passive collection become unethical?",
+              "How would you monitor for staging sites?",
+            ],
+          ],
+          [
+            "Instructor prompt: you have thirty minutes and only a company name. What do you do, and what do you not do?",
+            [
+              "Confirm scope and authorisation in writing",
+              "Start passive, log sources",
+              "Do not scan or probe yet",
+              "Rate confidence and note questions",
+              "Do not collect personal details beyond what scope allows",
+            ],
+          ],
+          [
+            "Demo checkpoints",
+            [
+              "Reveal Builder layers one by one and ask what a defender removes",
+              "Run the robots.txt break-it step live",
+            ],
+          ],
+          [
+            "Lab troubleshooting",
+            [
+              "Port 8080 in use: change the left side of -p to another port, such as 127.0.0.1:8081",
+              "Empty page or 403: check the lab-site folder path and the $(pwd) quoting",
+              "No dig on Windows: use nslookup or WSL",
+              "Volume mount errors on Windows: use WSL, or ${PWD} in PowerShell",
+              "Container name already used: docker rm -f acme-web",
+            ],
+          ],
+        ],
+      };
+    </script>
+
+    <script>
+      boot();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+/* Simulated terminal. viz item {t, prompt, cmds:{"command":"canned output"}}. Never executes anything. */
+const TERM={};
+function term(id,x){TERM[id]=x;return `<div class="viz" data-term="${id}"><b>${x.t}</b> <span class="lab-only">SIMULATION</span><div class="term" style="min-height:140px;white-space:pre-wrap" aria-live="polite"><span class="out"></span></div><div class="ctl"><input class="in" aria-label="Command" autocomplete="off" spellcheck="false" placeholder="type a command, or try: help"><button class="btn" data-tm="run">Run</button></div><div class="ctl">${Object.keys(x.cmds).map((c,i)=>`<button class="chip" data-tm="${i}">${esc(c)}</button>`).join("")}</div></div>`}
+function termRun(bx,cmd){const x=TERM[bx.dataset.term],o=bx.querySelector(".out"),c=cmd.trim();if(!c)return;if(c=="clear"){o.textContent="";return}
+const r=c=="help"?"Available in this simulation:\n"+Object.keys(x.cmds).join("\n"):(x.cmds[c]!==undefined?x.cmds[c]:"This simulation only knows the commands listed by help. Run real commands in your own lab.");o.textContent+=x.prompt+" "+c+"\n"+r+"\n\n"}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-tm]");if(!b)return;const bx=b.closest("[data-term]"),i=bx.querySelector("input");if(b.dataset.tm=="run"){termRun(bx,i.value);i.value=""}else termRun(bx,Object.keys(TERM[bx.dataset.term].cmds)[+b.dataset.tm])});
+document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.matches("[data-term] input")){termRun(e.target.closest("[data-term]"),e.target.value);e.target.value=""}});
