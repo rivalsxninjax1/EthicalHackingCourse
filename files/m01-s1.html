@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>M1 · Foundations</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- 1 Title -->
+    <section class="slide">
+      <span class="tag">Module 1 · Session 1 · 2 hours</span>
+      <h1>
+        Cybersecurity &amp; <span class="g">Ethical Hacking</span> Foundations
+      </h1>
+      <p class="mut">
+        CIA triad · hackers &amp; threats · pentest lifecycle · law &amp; ethics
+      </p>
+    </section>
+
+    <!-- 2 Objectives -->
+    <section class="slide">
+      <h2>By the end of today you can…</h2>
+      <ul>
+        <li class="reveal">Explain what cybersecurity protects, and why</li>
+        <li class="reveal">
+          Define the <b class="g">CIA triad</b> and match attacks to it
+        </li>
+        <li class="reveal">Tell white, grey and black hat hackers apart</li>
+        <li class="reveal">Describe the 5 phases of a penetration test</li>
+        <li class="reveal">
+          Explain why <b class="y">written authorization</b> makes hacking legal
+        </li>
+      </ul>
+    </section>
+
+    <!-- 3 What is cybersecurity -->
+    <section class="slide">
+      <h2>What is cybersecurity?</h2>
+      <p>
+        Protecting systems, networks and data from unauthorized access, damage
+        or disruption.
+      </p>
+      <div class="grid">
+        <div class="card reveal">
+          <h3 class="bl">Asset</h3>
+          <p>Anything of value: data, servers, accounts, reputation</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="r">Threat</h3>
+          <p>Anyone or anything that can cause harm</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="y">Vulnerability</h3>
+          <p>A weakness a threat can use</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="g">Risk</h3>
+          <p>Likelihood × impact of a threat using a vulnerability</p>
+        </div>
+      </div>
+      <div class="notes">
+        Ask: "What is the most valuable asset on your phone?" Use answers as
+        examples for each card.
+      </div>
+    </section>
+
+    <!-- 4 CIA triad -->
+    <section class="slide">
+      <h2>The CIA Triad</h2>
+      <div class="two">
+        <svg viewBox="0 0 400 340" style="width: 100%">
+          <polygon
+            points="200,45 55,295 345,295"
+            fill="none"
+            stroke="#26305a"
+            stroke-width="5"
+          />
+          <g class="node">
+            <circle cx="200" cy="45" r="38" fill="#4ef0b5" />
+            <text
+              x="200"
+              y="58"
+              text-anchor="middle"
+              font-size="40"
+              font-weight="800"
+              fill="#0b1020"
+            >
+              C
+            </text>
+          </g>
+          <g class="node" style="animation-delay: 0.8s">
+            <circle cx="55" cy="295" r="38" fill="#5aa9ff" />
+            <text
+              x="55"
+              y="308"
+              text-anchor="middle"
+              font-size="40"
+              font-weight="800"
+              fill="#0b1020"
+            >
+              I
+            </text>
+          </g>
+          <g class="node" style="animation-delay: 1.6s">
+            <circle cx="345" cy="295" r="38" fill="#ffd166" />
+            <text
+              x="345"
+              y="308"
+              text-anchor="middle"
+              font-size="40"
+              font-weight="800"
+              fill="#0b1020"
+            >
+              A
+            </text>
+          </g>
+        </svg>
+        <ul>
+          <li class="reveal">
+            <b class="g">Confidentiality</b>: only the right people can read it
+          </li>
+          <li class="reveal">
+            <b class="bl">Integrity</b>: data is accurate and unaltered
+          </li>
+          <li class="reveal">
+            <b class="y">Availability</b>: systems work when needed
+          </li>
+        </ul>
+      </div>
+      <div class="notes">
+        Every security control and every attack maps to at least one of these
+        three. Keep returning to this slide all course.
+      </div>
+    </section>
+
+    <!-- 5 CIA attacks -->
+    <section class="slide">
+      <h2>CIA in real attacks</h2>
+      <div class="grid">
+        <div class="card reveal">
+          <span class="tag">Confidentiality</span>
+          <h3>Data breach</h3>
+          <p>A leaked customer database or a stolen password list</p>
+        </div>
+        <div class="card reveal">
+          <span class="tag">Integrity</span>
+          <h3>Tampering</h3>
+          <p>A defaced website, or a changed bank balance or exam result</p>
+        </div>
+        <div class="card reveal">
+          <span class="tag">Availability</span>
+          <h3>Disruption</h3>
+          <p>DDoS knocks a site offline; ransomware locks every file</p>
+        </div>
+      </div>
+      <p class="y reveal">Discussion: which one hurts a hospital most?</p>
+    </section>
+
+    <!-- 6 Hackers -->
+    <section class="slide">
+      <h2>Types of hackers</h2>
+      <div class="grid">
+        <div class="card reveal">
+          <h3 class="g">White hat</h3>
+          <p>
+            Has permission. Finds and reports weaknesses to improve security.
+            <b>This is us.</b>
+          </p>
+        </div>
+        <div class="card reveal">
+          <h3 style="color: #aaa">Grey hat</h3>
+          <p>
+            No permission, but usually no malicious goal. Still <b>illegal</b>.
+          </p>
+        </div>
+        <div class="card reveal">
+          <h3 class="r">Black hat</h3>
+          <p>No permission, harmful intent: theft, fraud, damage.</p>
+        </div>
+      </div>
+      <p class="mut reveal">
+        The difference is not skill. It is
+        <b class="y">permission and intent</b>.
+      </p>
+    </section>
+
+    <!-- 7 Threat actors -->
+    <section class="slide">
+      <h2>Who attacks, and why?</h2>
+      <table>
+        <tr>
+          <th>Actor</th>
+          <th>Motivation</th>
+          <th>Skill</th>
+        </tr>
+        <tr class="reveal">
+          <td>Script kiddie</td>
+          <td>Fun, curiosity, fame</td>
+          <td>Low</td>
+        </tr>
+        <tr class="reveal">
+          <td>Hacktivist</td>
+          <td>Political or social cause</td>
+          <td>Medium</td>
+        </tr>
+        <tr class="reveal">
+          <td>Cybercriminal</td>
+          <td>Money</td>
+          <td>Medium–High</td>
+        </tr>
+        <tr class="reveal">
+          <td>Insider</td>
+          <td>Revenge, money, or a mistake</td>
+          <td>Varies</td>
+        </tr>
+        <tr class="reveal">
+          <td>Nation-state</td>
+          <td>Espionage, disruption</td>
+          <td>Very high</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- 8 Common attacks -->
+    <section class="slide">
+      <h2>Common attacks you will learn</h2>
+      <div class="grid">
+        <div class="card reveal">
+          <h3>Phishing</h3>
+          <p>Fake messages that steal logins</p>
+        </div>
+        <div class="card reveal">
+          <h3>Malware</h3>
+          <p>Viruses, trojans, ransomware</p>
+        </div>
+        <div class="card reveal">
+          <h3>SQL injection</h3>
+          <p>Tricking a database through a form</p>
+        </div>
+        <div class="card reveal">
+          <h3>DDoS</h3>
+          <p>Flooding a service until it fails</p>
+        </div>
+        <div class="card reveal">
+          <h3>MITM</h3>
+          <p>Secretly sitting between two parties</p>
+        </div>
+        <div class="card reveal">
+          <h3>Password attacks</h3>
+          <p>Guessing, cracking, reusing</p>
+        </div>
+        <div class="card reveal">
+          <h3>Social engineering</h3>
+          <p>Hacking people, not machines</p>
+        </div>
+        <div class="card reveal">
+          <h3>Zero-day</h3>
+          <p>A flaw with no patch yet</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 Break -->
+    <section class="slide" style="text-align: center; align-items: center">
+      <span class="tag">Hour 2</span>
+      <h1>Break · <span class="g">10 min</span></h1>
+      <p class="mut">Next: how professionals hack legally</p>
+    </section>
+
+    <!-- 10 Phases -->
+    <section class="slide">
+      <h2>The 5 phases of a penetration test</h2>
+      <div class="chain">
+        <div class="card reveal">
+          <div class="n">1</div>
+          <h3>Recon</h3>
+          <p>Gather information</p>
+        </div>
+        <div class="card reveal">
+          <div class="n">2</div>
+          <h3>Scanning</h3>
+          <p>Find hosts, ports, services</p>
+        </div>
+        <div class="card reveal">
+          <div class="n">3</div>
+          <h3>Exploitation</h3>
+          <p>Gain access</p>
+        </div>
+        <div class="card reveal">
+          <div class="n">4</div>
+          <h3>Post-exploit</h3>
+          <p>Escalate, pivot, prove impact</p>
+        </div>
+        <div class="card reveal">
+          <div class="n">5</div>
+          <h3>Reporting</h3>
+          <p>Findings and fixes</p>
+        </div>
+      </div>
+      <p class="mut reveal">Modules 5–13 follow exactly this order.</p>
+      <div class="notes">
+        Mention the Lockheed Martin Cyber Kill Chain as the attacker's view of
+        the same flow. Reporting is the phase that makes us professionals, not
+        criminals.
+      </div>
+    </section>
+
+    <!-- 11 Pentest types -->
+    <section class="slide">
+      <h2>Types of penetration tests</h2>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Tester knows</th>
+          <th>Simulates</th>
+        </tr>
+        <tr class="reveal">
+          <td class="g">Black box</td>
+          <td>Nothing</td>
+          <td>An outside attacker</td>
+        </tr>
+        <tr class="reveal">
+          <td class="y">Grey box</td>
+          <td>Some info (a user account, a network map)</td>
+          <td>A user or partner gone bad</td>
+        </tr>
+        <tr class="reveal">
+          <td class="bl">White box</td>
+          <td>Everything (source code, architecture)</td>
+          <td>A deep audit</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- 12 Law -->
+    <section class="slide">
+      <h2>The law</h2>
+      <p class="big">
+        Authorization is the line between a <span class="g">pentester</span> and
+        a <span class="r">criminal</span>.
+      </p>
+      <ul>
+        <li class="reveal">
+          Unauthorized access, data damage and similar computer offences are
+          punishable under Nepal's <b>Electronic Transactions Act, 2063</b>
+        </li>
+        <li class="reveal">
+          "I was only testing" is <b class="r">not</b> a defence
+        </li>
+        <li class="reveal">
+          Practise only on your own lab or on platforms that allow it
+        </li>
+      </ul>
+      <div class="notes">
+        Teacher: check the current ETA text and any amendments or newer cyber
+        laws before class, and cite specific sections if you want to.
+      </div>
+    </section>
+
+    <!-- 13 RoE -->
+    <section class="slide">
+      <h2>Rules of Engagement (RoE)</h2>
+      <p class="mut">A real test starts with a signed document that defines:</p>
+      <div class="grid">
+        <div class="card reveal">
+          <h3 class="g">Scope</h3>
+          <p>Exactly which systems and IPs are allowed</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="bl">Timing</h3>
+          <p>When testing may happen</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="y">Methods</h3>
+          <p>What is allowed or banned (DoS, social engineering…)</p>
+        </div>
+        <div class="card reveal">
+          <h3 class="r">Data handling</h3>
+          <p>How findings and data are stored and protected</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 Code of conduct -->
+    <section class="slide">
+      <h2>Student code of conduct</h2>
+      <ul>
+        <li class="reveal">
+          I attack <b>only</b> the lab machines my instructor provides
+        </li>
+        <li class="reveal">
+          I never test a real website, network or person without written
+          permission
+        </li>
+        <li class="reveal">
+          I report weaknesses I find; I do not exploit them for gain
+        </li>
+        <li class="reveal">I protect any data I see during labs</li>
+      </ul>
+      <p class="y reveal">
+        Everyone signs the ethics agreement before Module 4.
+      </p>
+    </section>
+
+    <!-- 15 Quiz -->
+    <section class="slide">
+      <h2>Quick check</h2>
+      <ul>
+        <li class="reveal">
+          A ransomware attack mainly breaks which part of CIA?
+          <b class="g">→ Availability</b>
+        </li>
+        <li class="reveal">
+          A hacker finds a bug without permission and reports it. Which hat?
+          <b class="g">→ Grey</b>
+        </li>
+        <li class="reveal">
+          Which pentest phase comes right after scanning?
+          <b class="g">→ Exploitation</b>
+        </li>
+        <li class="reveal">
+          What makes a pentest legal?
+          <b class="g">→ Written authorization (scope + RoE)</b>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 16 Recap -->
+    <section class="slide">
+      <h2>Recap</h2>
+      <ul>
+        <li class="reveal">
+          <b class="g">CIA</b>: confidentiality, integrity, availability
+        </li>
+        <li class="reveal">
+          Hacker types differ by <b class="y">permission and intent</b>
+        </li>
+        <li class="reveal">Pentest = <b>5 phases</b>, ending in a report</li>
+        <li class="reveal">No authorization, no hacking</li>
+      </ul>
+      <p class="mut reveal">Next: Module 2 · Networking Fundamentals</p>
+    </section>
+
+    <script src="slides.js"></script>
+  </body>
+</html>

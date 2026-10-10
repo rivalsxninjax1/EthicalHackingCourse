@@ -1,0 +1,243 @@
+:root {
+    --bg: #0b1020;
+    --panel: #141b34;
+    --ink: #e8ecff;
+    --mut: #9aa6d1;
+    --a: #4ef0b5;
+    --b: #5aa9ff;
+    --c: #ff6b8a;
+    --w: #ffd166;
+    --ln: #26305a
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0
+}
+
+html,
+body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    padding: 6vh 6vw 9vh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.2vh
+}
+
+.slide.on {
+    display: flex;
+    animation: in .5s ease
+}
+
+@keyframes in {
+    from {
+        opacity: 0;
+        transform: translateY(16px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+h1 {
+    font-size: 5vw;
+    line-height: 1.1
+}
+
+h2 {
+    font-size: 3.4vw;
+    color: var(--a)
+}
+
+p,
+li {
+    font-size: 2vw;
+    line-height: 1.45
+}
+
+ul {
+    padding-left: 2.2vw;
+    display: grid;
+    gap: 1.4vh
+}
+
+.mut {
+    color: var(--mut)
+}
+
+.g {
+    color: var(--a)
+}
+
+.bl {
+    color: var(--b)
+}
+
+.r {
+    color: var(--c)
+}
+
+.y {
+    color: var(--w)
+}
+
+.grid {
+    display: grid;
+    gap: 1.6vw;
+    grid-template-columns: repeat(auto-fit, minmax(17vw, 1fr))
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid var(--ln);
+    border-radius: 1.2vw;
+    padding: 1.5vw
+}
+
+.card h3 {
+    font-size: 2.1vw;
+    margin-bottom: .8vh
+}
+
+.card p {
+    font-size: 1.55vw
+}
+
+.tag {
+    display: inline-block;
+    padding: .2vw .9vw;
+    border-radius: 2vw;
+    font-size: 1.3vw;
+    background: #1d2750;
+    color: var(--b);
+    margin-bottom: .8vh
+}
+
+.two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3vw;
+    align-items: center
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%
+}
+
+th,
+td {
+    padding: 1.1vh 1.2vw;
+    border-bottom: 1px solid var(--ln);
+    font-size: 1.7vw;
+    text-align: left
+}
+
+th {
+    color: var(--a)
+}
+
+.chain {
+    display: flex;
+    gap: 1vw;
+    align-items: stretch
+}
+
+.chain .card {
+    flex: 1;
+    text-align: center;
+    border-width: 2px
+}
+
+.chain .n {
+    font-size: 3vw;
+    font-weight: 800;
+    color: var(--a)
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: .45s
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: none
+}
+
+.node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: p 2.4s ease-in-out infinite
+}
+
+@keyframes p {
+    50% {
+        transform: scale(1.14)
+    }
+}
+
+.big {
+    font-size: 2.6vw;
+    font-weight: 700
+}
+
+#bar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: .7vh;
+    background: var(--a);
+    width: 0;
+    transition: width .3s;
+    z-index: 9
+}
+
+#ctr {
+    position: fixed;
+    right: 2vw;
+    bottom: 2vh;
+    color: var(--mut);
+    font-size: 1.1vw;
+    z-index: 9
+}
+
+#home {
+    position: fixed;
+    left: 2vw;
+    bottom: 2vh;
+    color: var(--mut);
+    font-size: 1.2vw;
+    text-decoration: none;
+    z-index: 9
+}
+
+.notes {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000d;
+    color: var(--w);
+    padding: 1.4vw 6vw 3.5vh;
+    font-size: 1.5vw;
+    z-index: 8
+}
+
+body.shownotes .slide.on .notes {
+    display: block
+}

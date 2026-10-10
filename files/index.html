@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ethical Hacking · 60-Hour Course</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      html,
+      body {
+        height: auto;
+        overflow: auto;
+      }
+      .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 48px 24px;
+      }
+      h1 {
+        font-size: 44px;
+      }
+      .sub {
+        color: var(--mut);
+        font-size: 20px;
+        margin: 8px 0 32px;
+      }
+      .mods {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      }
+      .mod h3 {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      .mod .hrs {
+        color: var(--a);
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      .mod a {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 12px;
+        margin-top: 6px;
+        border-radius: 8px;
+        background: #1d2750;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 15px;
+      }
+      .mod a:hover {
+        background: #2a3870;
+      }
+      .mod a.soon {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .mod small {
+        color: var(--mut);
+        white-space: nowrap;
+      }
+      .part {
+        grid-column: 1/-1;
+        color: var(--b);
+        font-size: 18px;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Ethical Hacking <span class="g">· 60 Hours</span></h1>
+      <p class="sub">
+        Session-by-session slides. Open a session, press F for fullscreen, use ←
+        → to teach.
+      </p>
+      <div class="mods" id="mods"></div>
+    </div>
+    <script>
+      const READY = ["m01-s1"];
+      const M = [
+        [
+          "Cybersecurity & Ethical Hacking Foundations",
+          [["Foundations, CIA Triad, Legal & Ethics", 2]],
+        ],
+        [
+          "Networking Fundamentals",
+          [
+            ["Addressing & Models", 2],
+            ["Transport & Key Protocols", 2],
+            ["Devices & Packet Analysis", 2],
+          ],
+        ],
+        [
+          "Linux for Hackers",
+          [
+            ["Terminal, Filesystem & Permissions", 2],
+            ["Users, Processes & Services", 2],
+            ["Bash Scripting Basics", 1],
+          ],
+        ],
+        [
+          "Lab Setup & Methodology",
+          [
+            ["Kali & Vulnerable Lab Setup", 2],
+            ["Pentest Methodology & Notes", 1],
+          ],
+        ],
+        [
+          "Reconnaissance & OSINT",
+          [
+            ["Passive Recon", 2],
+            ["Active Recon", 2],
+          ],
+        ],
+        [
+          "Scanning & Enumeration",
+          [
+            ["Nmap Essentials", 2],
+            ["Nmap NSE & Service Enumeration", 2],
+            ["Vulnerability Scanning", 1],
+          ],
+        ],
+        [
+          "Web Application Hacking",
+          [
+            ["HTTP, Burp & OWASP Top 10", 2],
+            ["SQL Injection", 2],
+            ["XSS & CSRF", 2],
+            ["Auth, Sessions & IDOR", 2],
+            ["Uploads, LFI, Cmd Injection & SSRF", 2],
+            ["Juice Shop Mini Challenge", 1],
+          ],
+        ],
+        [
+          "Exploitation & Metasploit",
+          [
+            ["Metasploit Basics", 2],
+            ["Shells, Meterpreter & msfvenom", 2],
+            ["Public Exploits & Shell Stabilization", 1],
+          ],
+        ],
+        [
+          "Password Attacks & Cryptography",
+          [
+            ["Hashes, Encoding & Cracking", 2],
+            ["Online Attacks & Defenses", 1],
+          ],
+        ],
+        [
+          "Privilege Escalation & Post-Exploitation",
+          [
+            ["Linux Privilege Escalation", 2],
+            ["Windows Privilege Escalation", 2],
+            ["Pivoting & Post-Exploitation", 2],
+          ],
+        ],
+        [
+          "Network & Wireless Attacks",
+          [
+            ["Sniffing & MITM", 2],
+            ["Wireless Security", 1],
+          ],
+        ],
+        [
+          "Social Engineering & Malware Concepts",
+          [["Phishing, Pretexting & Malware", 2]],
+        ],
+        [
+          "Reporting & Defense",
+          [
+            ["Reporting & CVSS", 1],
+            ["Hardening & Blue Team Intro", 1],
+          ],
+        ],
+        ["Capstone: Full Penetration Test", [["Capstone", 3]]],
+      ];
+      const box = document.getElementById("mods");
+      M.forEach((m, k) => {
+        if (k === 0)
+          box.insertAdjacentHTML(
+            "beforeend",
+            '<div class="part">Part A · Foundations (15h)</div>',
+          );
+        if (k === 3)
+          box.insertAdjacentHTML(
+            "beforeend",
+            '<div class="part">Part B · Ethical Hacking (45h)</div>',
+          );
+        const n = String(k + 1).padStart(2, "0"),
+          h = m[1].reduce((a, s) => a + s[1], 0);
+        const links = m[1]
+          .map((s, j) => {
+            const f = `m${n}-s${j + 1}`;
+            return `<a class="${READY.includes(f) ? "" : "soon"}" href="${f}.html"><span>S${j + 1} · ${s[0]}</span><small>${s[1]}h</small></a>`;
+          })
+          .join("");
+        box.insertAdjacentHTML(
+          "beforeend",
+          `<div class="card mod"><h3>Module ${k + 1}: ${m[0]}</h3><div class="hrs">${h} hours</div>${links}</div>`,
+        );
+      });
+    </script>
+  </body>
+</html>
